@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.kovalexey.edt.autoopencontentassistant">
+      <category name="org.kovalexey.category.plugins"/>
+   </feature>
+   <category-def name="org.kovalexey.category.plugins" label="Плагины EDT"/>
+</site>
