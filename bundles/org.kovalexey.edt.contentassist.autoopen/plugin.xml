@@ -2,12 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.startup">
-      <startup
-            class="org.kovalexey.edt.autoopenpropossal.StartupHandler">
-      </startup>
-   </extension>
-   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             class="org.kovalexey.edt.autoopenpropossal.SettingsPage"
@@ -20,6 +14,12 @@
       <initializer
             class="org.kovalexey.edt.autoopenpropossal.ProposalSettingsInitializer">
       </initializer>
+   </extension>
+   <extension
+         point="com._1c.g5.wiring.serviceProvider">
+      <bundle
+            symbolicName="org.kovalexey.edt.autoopenpropossal">
+      </bundle>
    </extension>
 
 </plugin>

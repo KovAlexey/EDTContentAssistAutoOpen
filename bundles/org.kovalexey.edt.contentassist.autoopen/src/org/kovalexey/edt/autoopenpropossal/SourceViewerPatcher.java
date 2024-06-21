@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.xtext.ui.editor.contentassist.XtextContentAssistProcessor;
 
 public class SourceViewerPatcher {
 	private static Field contentAssistantField;
@@ -28,7 +29,7 @@ public class SourceViewerPatcher {
 		return true;
 	}
 	
-	public static ContentAssistant getContentAssistant(SourceViewer sourceViewer) {
+	public static ContentAssistant GetContentAssistant(SourceViewer sourceViewer) {
 		if (contentAssistantField == null) {
 			if (!ApplyPatchClass()) {
 				return null;
@@ -46,6 +47,23 @@ public class SourceViewerPatcher {
 		}
 		
 		return null;
+	}
+	
+	public static Boolean ApplySourceViewPatch(SourceViewer sourceView) {
+		ContentAssistant contentAssist = SourceViewerPatcher.GetContentAssistant(sourceView);
+		if (contentAssist == null) {
+			return false;
+		}
+
+		Settings scopePreferenceStore = Activator.getDefault().getSettings();
+		int timeout = scopePreferenceStore.getTimeout();
+		String charset = scopePreferenceStore.getCharset();
+		
+		contentAssist.setAutoActivationDelay(timeout);
+		var contentAssistProcessor = (XtextContentAssistProcessor)contentAssist.getContentAssistProcessor("__dftl_partition_content_type");
+		contentAssistProcessor.setCompletionProposalAutoActivationCharacters(charset);
+		
+		return true;
 	}
 
 }
