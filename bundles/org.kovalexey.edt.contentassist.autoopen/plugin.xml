@@ -4,6 +4,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
+            category="com._1c.g5.v8.dt.bsl.Bsl"
             class="org.kovalexey.edt.autoopenpropossal.SettingsPage"
             id="org.kovalexey.edt.autoopenpropossal.SettingsPage"
             name="Автооткрытие подсказки">

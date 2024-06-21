@@ -50,14 +50,18 @@ public class SourceViewerPatcher {
 	}
 	
 	public static Boolean ApplySourceViewPatch(SourceViewer sourceView) {
+		Settings settings = Activator.getDefault().getSettings();
+		if (!settings.getEnabled()) {
+			return false;
+		}
 		ContentAssistant contentAssist = SourceViewerPatcher.GetContentAssistant(sourceView);
 		if (contentAssist == null) {
 			return false;
 		}
 
-		Settings scopePreferenceStore = Activator.getDefault().getSettings();
-		int timeout = scopePreferenceStore.getTimeout();
-		String charset = scopePreferenceStore.getCharset();
+
+		int timeout = settings.getTimeout();
+		String charset = settings.getCharset();
 		
 		contentAssist.setAutoActivationDelay(timeout);
 		var contentAssistProcessor = (XtextContentAssistProcessor)contentAssist.getContentAssistProcessor("__dftl_partition_content_type");
