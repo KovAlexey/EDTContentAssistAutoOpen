@@ -3,7 +3,7 @@
 **1. Установка**
 
 Устанавливается из репозитория штатными средствами EDT.
-> https://kovalexey.github.io/EDTContentAssistAutoOpen/
+> https://kovalexey.github.io/EDTContentAssistAutoOpen/master
 
 **2. Настройка**
 
