@@ -35,7 +35,7 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public void init() {
-		PlatformUI.getWorkbench().addWindowListener(ListenersImp.windowsListener);
+		PlatformUI.getWorkbench().addWindowListener(ListenersImpl.windowsListener);
 	}
 	
 	@Override

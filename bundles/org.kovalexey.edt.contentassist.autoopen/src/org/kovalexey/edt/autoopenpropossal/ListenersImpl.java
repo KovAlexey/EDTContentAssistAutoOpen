@@ -16,7 +16,7 @@ import com._1c.g5.v8.dt.bsl.ui.editor.BslXtextEditor;
 import com._1c.g5.v8.dt.md.ui.editor.base.DtGranularEditor;
 import com._1c.g5.v8.dt.md.ui.editor.base.DtGranularEditorXtextEditorPage;
 
-public class ListenersImp {
+public class ListenersImpl {
 	
 	public static IPageChangedListener PageChangedListener = new IPageChangedListener() {
 		@Override
@@ -35,8 +35,6 @@ public class ListenersImp {
 		@Override
 		public void partOpened(IWorkbenchPartReference partRef) {
 
-			if (partRef instanceof EditorReference) {
-				IEditorReference editorReference = (IEditorReference)partRef;
 				IWorkbenchPart part = partRef.getPart(false);
 				if (part instanceof DtGranularEditor<?>) {
 					DtGranularEditor<?> editorPart = (DtGranularEditor<?>)part;
@@ -47,8 +45,6 @@ public class ListenersImp {
 					BslXtextEditor editorPart = (BslXtextEditor)part;
 					SourceViewerPatcher.ApplySourceViewPatch((SourceViewer)editorPart.getInternalSourceViewer());
 				}
-			}
-
 		}
 	};
 	
@@ -60,14 +56,10 @@ public class ListenersImp {
 
 			@Override
 			public void windowActivated(IWorkbenchWindow window) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
 			public void windowDeactivated(IWorkbenchWindow window) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
