@@ -29,7 +29,7 @@ jobs:
       run: mvn -B clean package --file pom.xml
 
     - name: Upload repo
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
-        name: EDTContentAssistAutoopenRepository
+        name: edtautoopencontentassistant
         path: repositories/org.kovalexey.autocontentassistantrepository/target/repository
