@@ -48,3 +48,4 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: repositories/org.kovalexey.autocontentassistantrepository/target/repository
         destination_dir: master
+        keep_files: true
