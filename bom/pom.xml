@@ -21,7 +21,7 @@
   <name>BOM</name>
 
   <prerequisites>
-    <maven>3.6.0</maven>
+    <maven>3.9.0</maven>
   </prerequisites>
 
   <properties>
