@@ -27,6 +27,10 @@ jobs:
         distribution: 'liberica'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
+  - name: Set up Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.9.0
 
     - name: Build with Maven
       run: mvn -B clean package --file pom.xml
