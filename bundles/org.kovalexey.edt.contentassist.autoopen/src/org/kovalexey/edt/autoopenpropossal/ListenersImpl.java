@@ -3,13 +3,12 @@ package org.kovalexey.edt.autoopenpropossal;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.text.source.SourceViewer;
-import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.internal.EditorReference;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 
 import com._1c.g5.v8.dt.bsl.ui.editor.BslXtextEditor;
@@ -38,7 +37,13 @@ public class ListenersImpl {
 				IWorkbenchPart part = partRef.getPart(false);
 				if (part instanceof DtGranularEditor<?>) {
 					DtGranularEditor<?> editorPart = (DtGranularEditor<?>)part;
+					IEditorPart activeEditor = editorPart.getActiveEditor();
 					
+					// Только редактор BSL 
+					if (activeEditor instanceof BslXtextEditor) {
+						SourceViewer viewer = (SourceViewer) ((XtextEditor) activeEditor).getInternalSourceViewer();
+						SourceViewerPatcher.ApplySourceViewPatch(viewer);
+					}
 					editorPart.removePageChangedListener(PageChangedListener);
 					editorPart.addPageChangedListener(PageChangedListener);
 				} else if (part instanceof BslXtextEditor) {
