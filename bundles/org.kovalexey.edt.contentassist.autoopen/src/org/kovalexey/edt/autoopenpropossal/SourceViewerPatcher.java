@@ -2,6 +2,7 @@ package org.kovalexey.edt.autoopenpropossal;
 
 import java.lang.reflect.Field;
 
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.xtext.ui.editor.contentassist.XtextContentAssistProcessor;
@@ -64,7 +65,7 @@ public class SourceViewerPatcher {
 		String charset = settings.getCharset();
 		
 		contentAssist.setAutoActivationDelay(timeout);
-		var contentAssistProcessor = (XtextContentAssistProcessor)contentAssist.getContentAssistProcessor("__dftl_partition_content_type");
+		var contentAssistProcessor = (XtextContentAssistProcessor)contentAssist.getContentAssistProcessor(IDocument.DEFAULT_CONTENT_TYPE);
 		contentAssistProcessor.setCompletionProposalAutoActivationCharacters(charset);
 		
 		return true;
