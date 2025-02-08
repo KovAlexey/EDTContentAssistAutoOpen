@@ -9,6 +9,6 @@ public interface IContentAssistSettings {
 	public String getCharset();
 	public void setCharset(String charset);
 	public int getTimeout();
-	public Boolean getEnabled();
+	public Boolean isEnabled();
 	public void setEnabled(Boolean enabled);
 }
