@@ -60,29 +60,30 @@ public class EditorsListenerManager implements IEditorsListenerManager {
 	public void applyPatchToOpenedParts() {
 		if (!proposalPatchSettings.isEnabled())
 			return;
-		
-		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-		for (IWorkbenchWindow iWorkbenchWindow : windows) {
-			applyPatchToOpenedParts(iWorkbenchWindow);
-			listenersManager.addPartListener(iWorkbenchWindow.getPartService(), new PartCloseOpenListener());
+		Display display = Display.getDefault();
+		if (display != null) {
+			display.syncExec(new Runnable() {
+				@Override
+				public void run() {
+					IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+					for (IWorkbenchWindow iWorkbenchWindow : windows) {
+						for (IWorkbenchPage page : iWorkbenchWindow.getPages()) {
+							IWorkbenchPartReference partReference = page.getActivePartReference();
+							IWorkbenchPart part = partReference.getPart(false);
+							if (part instanceof DtGranularEditor<?>) {
+								DtGranularEditor<?> editorPart = (DtGranularEditor<?>)part;
+								applyPatchToXtextEditor(editorPart);
+								
+							} 
+						}
+						listenersManager.addPartListener(iWorkbenchWindow.getPartService(), new PartCloseOpenListener());
+					}
+				}
+			});
 		}
 	}
 	
-	public void applyPatchToOpenedParts(IWorkbenchWindow window) {
-		if (!proposalPatchSettings.isEnabled())
-			return;
-		
-		for (IWorkbenchPage page : window.getPages()) {
-			IWorkbenchPartReference partReference = page.getActivePartReference();
-			IWorkbenchPart part = partReference.getPart(false);
-			if (part instanceof DtGranularEditor<?>) {
-				DtGranularEditor<?> editorPart = (DtGranularEditor<?>)part;
-				applyPatchToXtextEditor(editorPart);
-				
-			} 
-		}
-	}
-	
+
 	private void applyPatchToXtextEditor(DtGranularEditor<?> editor) {
 		if (!proposalPatchSettings.isEnabled())
 			return;
