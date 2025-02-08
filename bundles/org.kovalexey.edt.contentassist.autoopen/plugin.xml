@@ -5,7 +5,7 @@
          point="org.eclipse.ui.preferencePages">
       <page
             category="com._1c.g5.v8.dt.bsl.Bsl"
-            class="org.kovalexey.edt.autoopenpropossal.SettingsPage"
+            class="org.kovalexey.edt.autoopenpropossal.DependecyInjectorFactory:org.kovalexey.edt.autoopenpropossal.settings.SettingsPage"
             id="org.kovalexey.edt.autoopenpropossal.SettingsPage"
             name="Автооткрытие подсказки">
       </page>
@@ -13,7 +13,7 @@
    <extension
          point="org.eclipse.equinox.preferences.preferences">
       <initializer
-            class="org.kovalexey.edt.autoopenpropossal.ProposalSettingsInitializer">
+            class="org.kovalexey.edt.autoopenpropossal.DependecyInjectorFactory:org.kovalexey.edt.autoopenpropossal.settings.ProposalSettingsInitializer">
       </initializer>
    </extension>
    <extension

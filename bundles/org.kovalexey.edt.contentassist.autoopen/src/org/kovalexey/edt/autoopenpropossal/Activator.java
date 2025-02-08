@@ -1,16 +1,12 @@
 package org.kovalexey.edt.autoopenpropossal;
 
-import org.eclipse.core.runtime.preferences.ConfigurationScope;
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IPageListener;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.kovalexey.edt.autoopenpropossal.listeners.IEditorsListenerManager;
 import org.osgi.framework.BundleContext;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -22,8 +18,8 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
-	private ScopedPreferenceStore preferenceStore;
-	private Settings settings;
+	private Injector injector;
+	private IEditorsListenerManager listenerManager;
 	
 	/**
 	 * The constructor
@@ -37,6 +33,25 @@ public class Activator extends AbstractUIPlugin {
 		plugin = this;
 		init();
 	}
+	
+    public synchronized Injector getInjector()
+    {
+        if (injector == null)
+            return injector = createInjector();
+        return injector;
+    }
+
+    private Injector createInjector()
+    {
+        try
+        {
+            return Guice.createInjector(new ExternalDependencyInjector(this));
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Failed to create injector for " + getBundle().getSymbolicName(), e);
+        }
+    }
 
 	public void init() {
 		
@@ -46,11 +61,8 @@ public class Activator extends AbstractUIPlugin {
 				
 				@Override
 				public void run() {
-					IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-					for (IWorkbenchWindow iWorkbenchWindow : windows) {
-						iWorkbenchWindow.getPartService().addPartListener(ListenersImpl.PartOpenedListener);
-					}
-					PlatformUI.getWorkbench().addWindowListener(ListenersImpl.windowsListener);
+					listenerManager = getInjector().getInstance(IEditorsListenerManager.class);
+					listenerManager.init();
 				}
 			});
 		}
@@ -73,19 +85,13 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 	
-	public ScopedPreferenceStore getPreferenceStore() {
-		if (this.preferenceStore == null) {
-			this.preferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, Activator.PLUGIN_ID);
-		}
-		return this.preferenceStore;
+
+	public void log(String log) {
+		plugin.getLog().info(log);
 	}
 	
-	public Settings getSettings() {
-		if (this.settings == null) {
-			this.settings = new Settings();
-			this.settings.loadSettings();
-		}
-		return this.settings;
+	public void log(Throwable exception) {
+		plugin.getLog().error(PLUGIN_ID, exception);
 	}
 
 }

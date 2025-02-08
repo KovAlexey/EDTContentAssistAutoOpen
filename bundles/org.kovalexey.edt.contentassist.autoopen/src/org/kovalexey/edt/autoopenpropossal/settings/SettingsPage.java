@@ -1,7 +1,5 @@
-package org.kovalexey.edt.autoopenpropossal;
+package org.kovalexey.edt.autoopenpropossal.settings;
 
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
@@ -9,9 +7,12 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import com.google.inject.Inject;
 
 public class SettingsPage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+	
+	@Inject
+	IContentAssistSettings settings;
 
 	public SettingsPage() {
 		super();
@@ -32,14 +33,14 @@ public class SettingsPage extends FieldEditorPreferencePage implements IWorkbenc
 
 	@Override
 	public void init(IWorkbench workbench) {
-		setPreferenceStore(Activator.getDefault().getPreferenceStore());
+		setPreferenceStore(settings.getPreferenceStore());
 	}
 
 	@Override
 	protected void createFieldEditors() {
-		addField(new BooleanFieldEditor(Settings.SETTINGS_ENABLED, "Включено", getFieldEditorParent()));
-		addField(new IntegerFieldEditor(Settings.SETTINGS_TIMEOUT, "Задержка", getFieldEditorParent()));
-		addField(new StringFieldEditor(Settings.SETTINGS_CHARSET, "Символы", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(ContentAssistSettings.SETTINGS_ENABLED, "Включено", getFieldEditorParent()));
+		addField(new IntegerFieldEditor(ContentAssistSettings.SETTINGS_TIMEOUT, "Задержка", getFieldEditorParent()));
+		addField(new StringFieldEditor(ContentAssistSettings.SETTINGS_CHARSET, "Символы", getFieldEditorParent()));
 	}
 
 }
