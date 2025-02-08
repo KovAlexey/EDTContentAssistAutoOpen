@@ -357,6 +357,6 @@ Public License instead of this License.
 
    <plugin
          id="org.kovalexey.edt.autoopenpropossal"
-         version="0.0.0.qualifer"/>
+         version="0.0.0"/>
 
 </feature>
