@@ -63,7 +63,7 @@ public class SourceViewerPatcher implements ISourceViewPatch {
 		Class<SourceViewer> sourceViewerClass = SourceViewer.class;
 		
 		try {
-			logger.log("Включаем доступность fContentAssistant у SourveViewer");
+			logger.log("Включаем доступность fContentAssistant у SourceViewer");
 			Field field = sourceViewerClass.getDeclaredField("fContentAssistant");
 			field.setAccessible(true);
 			contentAssistantField = field;

@@ -1,6 +1,5 @@
 package org.kovalexey.edt.autoopenpropossal.settings;
 
-import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -51,8 +50,6 @@ public class ContentAssistSettings implements IContentAssistSettings {
 			}
 		});
 	}
-	
-	
 	
 	public ScopedPreferenceStore getPreferenceStore() {
 		return this.preferenceStore;

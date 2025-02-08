@@ -6,7 +6,6 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchPage;
@@ -14,7 +13,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.IPage;
 import org.kovalexey.edt.autoopenpropossal.patcher.ISourceViewPatch;
 import org.kovalexey.edt.autoopenpropossal.settings.IContentAssistSettings;
 
@@ -35,8 +33,6 @@ public class EditorsListenerManager implements IEditorsListenerManager {
 	private IContentAssistSettings proposalPatchSettings;
 	
 	public EditorsListenerManager() {
-		
-
 	}
 	
 	public void init() {
@@ -55,8 +51,6 @@ public class EditorsListenerManager implements IEditorsListenerManager {
 			});
 		}
 		
-		
-		
 	}
 	
 	public void stop() {
@@ -64,6 +58,9 @@ public class EditorsListenerManager implements IEditorsListenerManager {
 	}
 	
 	public void applyPatchToOpenedParts() {
+		if (!proposalPatchSettings.isEnabled())
+			return;
+		
 		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
 		for (IWorkbenchWindow iWorkbenchWindow : windows) {
 			applyPatchToOpenedParts(iWorkbenchWindow);
@@ -72,6 +69,9 @@ public class EditorsListenerManager implements IEditorsListenerManager {
 	}
 	
 	public void applyPatchToOpenedParts(IWorkbenchWindow window) {
+		if (!proposalPatchSettings.isEnabled())
+			return;
+		
 		for (IWorkbenchPage page : window.getPages()) {
 			IWorkbenchPartReference partReference = page.getActivePartReference();
 			IWorkbenchPart part = partReference.getPart(false);
@@ -81,6 +81,54 @@ public class EditorsListenerManager implements IEditorsListenerManager {
 				
 			} 
 		}
+	}
+	
+	private void applyPatchToXtextEditor(DtGranularEditor<?> editor) {
+		if (!proposalPatchSettings.isEnabled())
+			return;
+		
+		IEditorPart activeEditor = editor.getActiveEditor();
+		
+		// Только редактор BSL 
+		if (activeEditor instanceof BslXtextEditor) {
+			applyPatchToXtextEditor((BslXtextEditor)activeEditor);
+		}
+		
+		listenersManager.addPageListener(editor, new  PageChangeListener());
+	}
+	
+	private void applyPatchToXtextEditor(BslXtextEditor editor) {
+		if (!proposalPatchSettings.isEnabled())
+			return;
+		
+		ISourceViewer viewer = editor.getInternalSourceViewer();
+		if (viewer instanceof SourceViewer) {
+			SourceViewer sourceViewer = (SourceViewer)viewer;
+			patcher.applyXTextSourceViewPatch(sourceViewer, proposalPatchSettings.getTimeout(), proposalPatchSettings.getCharset());
+		}
+		
+	}
+	
+	private class WindowListener implements IWindowListener {
+		
+		@Override
+		public void windowActivated(IWorkbenchWindow window) {
+		}
+
+		@Override
+		public void windowOpened(IWorkbenchWindow window) {
+			listenersManager.addPartListener(window.getPartService(), new PartCloseOpenListener());
+		}
+
+		@Override
+		public void windowDeactivated(IWorkbenchWindow window) {
+		}
+
+		@Override
+		public void windowClosed(IWorkbenchWindow window) {
+			listenersManager.removePartListener(window.getPartService());
+		}
+
 	}
 	
 	private class PartCloseOpenListener implements IPartListener2 {
@@ -114,26 +162,6 @@ public class EditorsListenerManager implements IEditorsListenerManager {
 		
 	}
 	
-	private void applyPatchToXtextEditor(DtGranularEditor<?> editor) {
-		IEditorPart activeEditor = editor.getActiveEditor();
-		
-		// Только редактор BSL 
-		if (activeEditor instanceof BslXtextEditor) {
-			applyPatchToXtextEditor((BslXtextEditor)activeEditor);
-		}
-		
-		listenersManager.addPageListener(editor, new  PageChangeListener());
-	}
-	
-	private void applyPatchToXtextEditor(BslXtextEditor editor) {
-		ISourceViewer viewer = editor.getInternalSourceViewer();
-		if (viewer instanceof SourceViewer) {
-			SourceViewer sourceViewer = (SourceViewer)viewer;
-			patcher.applyXTextSourceViewPatch(sourceViewer, proposalPatchSettings.getTimeout(), proposalPatchSettings.getCharset());
-		}
-		
-	}
-	
 	private class PageChangeListener implements IPageChangedListener {
 			
 		@Override
@@ -152,27 +180,5 @@ public class EditorsListenerManager implements IEditorsListenerManager {
 		
 	}
 
-	
-	private class WindowListener implements IWindowListener {
-		
-		@Override
-		public void windowActivated(IWorkbenchWindow window) {
-		}
-
-		@Override
-		public void windowOpened(IWorkbenchWindow window) {
-			listenersManager.addPartListener(window.getPartService(), new PartCloseOpenListener());
-		}
-
-		@Override
-		public void windowDeactivated(IWorkbenchWindow window) {
-		}
-
-		@Override
-		public void windowClosed(IWorkbenchWindow window) {
-			listenersManager.removePartListener(window.getPartService());
-		}
-
-	}
 	
 }
