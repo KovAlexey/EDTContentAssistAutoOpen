@@ -7,6 +7,9 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.kovalexey.edt.autoopenpropossal.Activator;
+import org.kovalexey.edt.autoopenpropossal.listeners.IEditorsListenerManager;
+
+import com.google.inject.Inject;
 
 public class ContentAssistSettings implements IContentAssistSettings {
 	public static final String SETTINGS_ENABLED = "enabled";
@@ -18,6 +21,9 @@ public class ContentAssistSettings implements IContentAssistSettings {
 	private int timeout = 500;
 	private String charset = ".";
 	private ScopedPreferenceStore preferenceStore;
+	
+	@Inject
+	private IEditorsListenerManager listenerManager;
 	
 	public ContentAssistSettings() {
 		this.preferenceStore = new ScopedPreferenceStore(SCOPE_CONTEXT, Activator.PLUGIN_ID);
@@ -41,6 +47,7 @@ public class ContentAssistSettings implements IContentAssistSettings {
 				default:
 					break;
 				}
+				listenerManager.applyPatchToOpenedParts();
 			}
 		});
 	}
@@ -73,7 +80,7 @@ public class ContentAssistSettings implements IContentAssistSettings {
 		return timeout;
 	}
 	
-	public Boolean getEnabled() {
+	public Boolean isEnabled() {
 		return enabled;
 	}
 

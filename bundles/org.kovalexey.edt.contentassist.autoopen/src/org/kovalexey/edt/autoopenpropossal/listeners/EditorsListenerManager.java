@@ -48,11 +48,7 @@ public class EditorsListenerManager implements IEditorsListenerManager {
 							
 				@Override
 				public void run() {
-					IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-					for (IWorkbenchWindow iWorkbenchWindow : windows) {
-						applyPatchToOpenedParts(iWorkbenchWindow);
-						listenersManager.addPartListener(iWorkbenchWindow.getPartService(), new PartCloseOpenListener());
-					}
+					applyPatchToOpenedParts();
 					PlatformUI.getWorkbench().addWindowListener(windowListener);
 				}
 			
@@ -65,6 +61,14 @@ public class EditorsListenerManager implements IEditorsListenerManager {
 	
 	public void stop() {
 		PlatformUI.getWorkbench().removeWindowListener(windowListener);
+	}
+	
+	public void applyPatchToOpenedParts() {
+		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+		for (IWorkbenchWindow iWorkbenchWindow : windows) {
+			applyPatchToOpenedParts(iWorkbenchWindow);
+			listenersManager.addPartListener(iWorkbenchWindow.getPartService(), new PartCloseOpenListener());
+		}
 	}
 	
 	public void applyPatchToOpenedParts(IWorkbenchWindow window) {
